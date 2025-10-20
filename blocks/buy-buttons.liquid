@@ -79,6 +79,23 @@
             can_add_to_cart: can_add_to_cart,
             add_to_cart_text: add_to_cart_text
           %}
+
+{% content_for 'blocks' %}
+
+{% assign out_of_stock_variants = product.variants | where: "available", false %}
+{% if out_of_stock_variants.size > 0 %}
+  <div class="out-of-stock-variants" style="margin-top: 16px;">
+    <p class="out-of-stock-label"><strong>Out of stock:</strong></p>
+    <ul class="out-of-stock-list">
+      {% for variant in out_of_stock_variants %}
+        <li class="out-of-stock-item">{{ variant.title }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endif %}
+
+
+
           {%- unless block_settings.gift_card_form and product.gift_card? -%}
             <span
               class="product-form-text__error hidden"
@@ -379,6 +396,36 @@
     top: calc(var(--padding-2xl) - (var(--icon-size-xs) / 2));
     right: calc(var(--padding-2xl) - var(--icon-size-xs));
   }
+
+.out-of-stock-variants {
+  margin-top: 12px;
+  font-family: var(--font-body--family);
+}
+
+.out-of-stock-label {
+  font-size: var(--font-size--sm);
+  margin-bottom: 6px;
+  color: var(--color-text-secondary);
+}
+
+.out-of-stock-list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.out-of-stock-item {
+  background-color: var(--color-background-alt); 
+  border: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size--sm);
+  padding: 4px 10px;
+  border-radius: 16px;
+  display: inline-block;
+}
+
 {% endstylesheet %}
 
 {% schema %}
