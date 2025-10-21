@@ -1,0 +1,125 @@
+{{ 'hero-banner.css' | asset_url | stylesheet_tag }}
+
+<div class="banner-section" 
+     data-section-id="{{ section.id }}" 
+     data-section-type="banner-section"
+     style="--text-color: {{ section.settings.text_color }};
+            --cta-border-color: {{ section.settings.cta_border_color }};
+            --cta-text-color: {{ section.settings.cta_text_color }};
+            --box-color: {{ section.settings.box_color }};
+            --box-opacity: {{ section.settings.box_opacity | divided_by: 100.0 }};
+            --overlay-opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }}">
+
+  <!-- Media -->
+  <div class="banner-media">
+    {% if section.settings.media_type == 'video' and section.settings.video_url != blank %}
+      <div class="banner-media__video-wrapper">
+        {% if section.settings.video_url contains 'youtube.com' or section.settings.video_url contains 'youtu.be' %}
+          {% if section.settings.video_url contains 'v=' %}
+            {% assign video_id = section.settings.video_url | split: 'v=' | last | split: '&' | first %}
+          {% else %}
+            {% assign video_id = section.settings.video_url | split: '/' | last %}
+          {% endif %}
+          <iframe class="banner-media__video"
+                  src="https://www.youtube.com/embed/{{ video_id }}?autoplay=1&mute=1&loop=1&playlist={{ video_id }}&controls=0&showinfo=0&rel=0&modestbranding=1"
+                  frameborder="0"
+                  allow="autoplay; encrypted-media"
+                  allowfullscreen>
+          </iframe>
+        {% elsif section.settings.video_url contains 'vimeo.com' %}
+          {% assign video_id = section.settings.video_url | split: '/' | last %}
+          <iframe class="banner-media__video"
+                  src="https://player.vimeo.com/video/{{ video_id }}?autoplay=1&muted=1&loop=1&background=1"
+                  frameborder="0"
+                  allow="autoplay; fullscreen"
+                  allowfullscreen>
+          </iframe>
+        {% endif %}
+      </div>
+    {% elsif section.settings.hero_image != blank %}
+      <div class="banner-media__image-wrapper">
+        <img src="{{ section.settings.hero_image | image_url: width: 1920 }}"
+             alt="{{ section.settings.hero_image.alt | default: 'Hero Banner' }}"
+             class="banner-media__image"
+             width="1920" height="1080" loading="eager">
+      </div>
+    {% endif %}
+
+    {% if section.settings.show_overlay %}
+      <div class="banner-media__overlay"></div>
+    {% endif %}
+  </div>
+
+  <!-- Content -->
+  <div class="banner-content banner-content--{{ section.settings.content_alignment }}">
+    {% if section.settings.show_content_box %}
+      <div class="banner-box">
+        {% for block in section.blocks %}
+          {% case block.type %}
+            {% when 'text' %}
+              {% if block.settings.text != blank %}
+                <{{ block.settings.heading_tag }} 
+                  class="banner-text banner-text--{{ block.settings.text_style }}"{% if section.settings.text_drop_shadow %} data-shadow="true"{% endif %}>
+                  {{ block.settings.text }}
+                </{{ block.settings.heading_tag }}>
+              {% endif %}
+            {% when 'cta' %}
+              {% if block.settings.button_text != blank and block.settings.button_url != blank %}
+                <a href="{{ block.settings.button_url }}" 
+                   class="banner-btn banner-btn--{{ block.settings.button_style }}">
+                   {{ block.settings.button_text }}
+                </a>
+              {% endif %}
+          {% endcase %}
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="banner-inline">
+        {% for block in section.blocks %}
+          {% case block.type %}
+            {% when 'text' %}
+              {% if block.settings.text != blank %}
+                <{{ block.settings.heading_tag }} 
+                  class="banner-text banner-text--{{ block.settings.text_style }}"{% if section.settings.text_drop_shadow %} data-shadow="true"{% endif %}>
+                  {{ block.settings.text }}
+                </{{ block.settings.heading_tag }}>
+              {% endif %}
+            {% when 'cta' %}
+              {% if block.settings.button_text != blank and block.settings.button_url != blank %}
+                <a href="{{ block.settings.button_url }}" 
+                   class="banner-btn banner-btn--{{ block.settings.button_style }}">
+                   {{ block.settings.button_text }}
+                </a>
+              {% endif %}
+          {% endcase %}
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Hero Banner",
+  "settings": [
+    {"type":"select","id":"media_type","label":"Media Type","options":[{"value":"image","label":"Image"},{"value":"video","label":"Video"}],"default":"image"},
+    {"type":"image_picker","id":"hero_image","label":"Hero Image"},
+    {"type":"url","id":"video_url","label":"Video URL"},
+    {"type":"checkbox","id":"show_overlay","label":"Show dark overlay","default":false},
+    {"type":"range","id":"overlay_opacity","label":"Overlay opacity","min":0,"max":100,"step":5,"unit":"%","default":50},
+    {"type":"select","id":"content_alignment","label":"Content alignment","options":[{"value":"left","label":"Left"},{"value":"center","label":"Center"},{"value":"right","label":"Right"}],"default":"center"},
+    {"type":"checkbox","id":"show_content_box","label":"Show content box","default":true},
+    {"type":"select","id":"box_color","label":"Box color","options":[{"value":"#000000","label":"Black"},{"value":"#ffffff","label":"White"}],"default":"#000000"},
+    {"type":"range","id":"box_opacity","label":"Box opacity","min":0,"max":100,"step":5,"unit":"%","default":80},
+    {"type":"select","id":"text_color","label":"Text color","options":[{"value":"#0C0C0C","label":"Black"},{"value":"#ffffff","label":"White"}],"default":"#ffffff"},
+    {"type":"checkbox","id":"text_drop_shadow","label":"Add drop shadow to text","default":false},
+    {"type":"select","id":"cta_border_color","label":"CTA border color","options":[{"value":"#000000","label":"Black"},{"value":"#ffffff","label":"White"}],"default":"#ffffff"},
+    {"type":"select","id":"cta_text_color","label":"CTA text color","options":[{"value":"#000000","label":"Black"},{"value":"#ffffff","label":"White"}],"default":"#ffffff"}
+  ],
+  "blocks": [
+    {"type":"text","name":"Text Block","limit":3,"settings":[{"type":"text","id":"text","label":"Text","default":"Your text here"},{"type":"select","id":"heading_tag","label":"Heading tag","options":[{"value":"h1","label":"H1"},{"value":"h2","label":"H2"},{"value":"h3","label":"H3"},{"value":"p","label":"Paragraph"}],"default":"h2"},{"type":"select","id":"text_style","label":"Text style","options":[{"value":"large","label":"Large"},{"value":"medium","label":"Medium"},{"value":"small","label":"Small"}],"default":"large"}]},
+    {"type":"cta","name":"Call to Action","limit":2,"settings":[{"type":"text","id":"button_text","label":"Button text","default":"Shop Now"},{"type":"url","id":"button_url","label":"Button URL"},{"type":"select","id":"button_style","label":"Button style","options":[{"value":"primary","label":"Primary"},{"value":"secondary","label":"Secondary"}],"default":"primary"}]}
+  ],
+  "presets":[{"name":"Hero Banner","blocks":[{"type":"text","settings":{"text":"FALL / WINTER 2021","heading_tag":"h3","text_style":"small"}},{"type":"text","settings":{"text":"Our new collection is an ode to purity, fluidity and nature.","heading_tag":"h2","text_style":"large"}},{"type":"cta","settings":{"button_text":"SHOP MEN","button_style":"primary"}},{"type":"cta","settings":{"button_text":"SHOP WOMEN","button_style":"primary"}}]}]
+}
+{% endschema %}
