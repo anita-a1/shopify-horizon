@@ -1,0 +1,44 @@
+{% schema %}
+{
+  "name": "Care Guide",
+  "settings": [],
+  "blocks": [],
+  "presets": [
+    {
+      "name": "Care Guide",
+      "category": "Product"
+    }
+  ]
+}
+{% endschema %}
+
+{% assign care_guide = closest.product.metafields.custom.care_guide.value %}
+
+{% if care_guide %}
+  <div class="product-care-guide">
+    {% if care_guide.title %}
+      <h3>{{ care_guide.title }}</h3>
+    {% endif %}
+    
+    {% if care_guide.description %}
+      <p>{{ care_guide.description }}</p>
+    {% endif %}
+    
+    {% if care_guide.icon %}
+      <img src="{{ care_guide.icon | file_url }}" alt="{{ care_guide.title }}">
+    {% endif %}
+  </div>
+{% endif %}
+
+{% stylesheet %}
+.product-care-guide {
+  margin-top: 20px;
+}
+
+.product-care-guide img {
+  max-width: 80px;
+  height: auto;
+  display: block;
+  margin-top: 10px;
+}
+{% endstylesheet %}
