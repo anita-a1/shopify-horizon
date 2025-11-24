@@ -82,18 +82,66 @@
 
 {% content_for 'blocks' %}
 
-{% assign out_of_stock_variants = product.variants | where: "available", false %}
-{% if out_of_stock_variants.size > 0 %}
-  <div class="out-of-stock-variants" style="margin-top: 16px;">
+{% capture out_of_stock_colors %}
+  {% for color in product.options_by_name['Color'].values %}
+    {% assign color_has_available = false %}
+    {% for variant in product.variants %}
+      {% if variant.option1 == color and variant.available %}
+        {% assign color_has_available = true %}
+        {% break %}
+      {% endif %}
+    {% endfor %}
+    {% if color_has_available == false %}{{ color }}|{% endif %}
+  {% endfor %}
+{% endcapture %}
+
+{% capture out_of_stock_sizes %}
+  {% for size in product.options_by_name['Size'].values %}
+    {% assign size_has_available = false %}
+    {% for variant in product.variants %}
+      {% if variant.option2 == size and variant.available %}
+        {% assign size_has_available = true %}
+        {% break %}
+      {% endif %}
+    {% endfor %}
+    {% if size_has_available == false %}{{ size }}|{% endif %}
+  {% endfor %}
+{% endcapture %}
+
+{% assign colors_array = out_of_stock_colors | split: '|' %}
+{% assign sizes_array = out_of_stock_sizes | split: '|' %}
+
+{% if colors_array.size > 0 or sizes_array.size > 0 %}
+  <div class="out-of-stock-options" style="margin-top: 16px;">
     <p class="out-of-stock-label"><strong>Out of stock:</strong></p>
-    <ul class="out-of-stock-list">
-      {% for variant in out_of_stock_variants %}
-        <li class="out-of-stock-item">{{ variant.title }}</li>
-      {% endfor %}
-    </ul>
+    
+    {% if colors_array.size > 0 %}
+      <div class="out-of-stock-group">
+        <p class="out-of-stock-group-label">Colors:</p>
+        <div class="out-of-stock-list">
+          {% for color in colors_array %}
+            {% if color != blank %}
+              <span class="out-of-stock-option">{{ color }}</span>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+    
+    {% if sizes_array.size > 0 %}
+      <div class="out-of-stock-group">
+        <p class="out-of-stock-group-label">Sizes:</p>
+        <div class="out-of-stock-list">
+          {% for size in sizes_array %}
+            {% if size != blank %}
+              <span class="out-of-stock-option">{{ size }}</span>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
   </div>
 {% endif %}
-
 
 
           {%- unless block_settings.gift_card_form and product.gift_card? -%}
