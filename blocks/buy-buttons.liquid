@@ -79,6 +79,71 @@
             can_add_to_cart: can_add_to_cart,
             add_to_cart_text: add_to_cart_text
           %}
+
+{% content_for 'blocks' %}
+
+{% capture out_of_stock_colors %}
+  {% for color in product.options_by_name['Color'].values %}
+    {% assign color_has_available = false %}
+    {% for variant in product.variants %}
+      {% if variant.option1 == color and variant.available %}
+        {% assign color_has_available = true %}
+        {% break %}
+      {% endif %}
+    {% endfor %}
+    {% if color_has_available == false %}{{ color }}|{% endif %}
+  {% endfor %}
+{% endcapture %}
+
+{% capture out_of_stock_sizes %}
+  {% for size in product.options_by_name['Size'].values %}
+    {% assign size_has_available = false %}
+    {% for variant in product.variants %}
+      {% if variant.option2 == size and variant.available %}
+        {% assign size_has_available = true %}
+        {% break %}
+      {% endif %}
+    {% endfor %}
+    {% if size_has_available == false %}{{ size }}|{% endif %}
+  {% endfor %}
+{% endcapture %}
+
+{% assign colors_array = out_of_stock_colors | split: '|' %}
+{% assign sizes_array = out_of_stock_sizes | split: '|' %}
+
+{% if colors_array.size > 0 or sizes_array.size > 0 %}
+  <div class="out-of-stock-options" style="margin-top: 16px;">
+    <p class="out-of-stock-label"><strong>Out of stock:</strong></p>
+    
+    {% if colors_array.size > 0 %}
+      <div class="out-of-stock-group">
+        <p class="out-of-stock-group-label">Colors:</p>
+        <div class="out-of-stock-list">
+          {% for color in colors_array %}
+            {% if color != blank %}
+              <span class="out-of-stock-option">{{ color }}</span>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+    
+    {% if sizes_array.size > 0 %}
+      <div class="out-of-stock-group">
+        <p class="out-of-stock-group-label">Sizes:</p>
+        <div class="out-of-stock-list">
+          {% for size in sizes_array %}
+            {% if size != blank %}
+              <span class="out-of-stock-option">{{ size }}</span>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+  </div>
+{% endif %}
+
+
           {%- unless block_settings.gift_card_form and product.gift_card? -%}
             <span
               class="product-form-text__error hidden"
@@ -379,6 +444,36 @@
     top: calc(var(--padding-2xl) - (var(--icon-size-xs) / 2));
     right: calc(var(--padding-2xl) - var(--icon-size-xs));
   }
+
+.out-of-stock-variants {
+  margin-top: 12px;
+  font-family: var(--font-body--family);
+}
+
+.out-of-stock-label {
+  font-size: var(--font-size--sm);
+  margin-bottom: 6px;
+  color: var(--color-text-secondary);
+}
+
+.out-of-stock-list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.out-of-stock-item {
+  background-color: var(--color-background-alt); 
+  border: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size--sm);
+  padding: 4px 10px;
+  border-radius: 16px;
+  display: inline-block;
+}
+
 {% endstylesheet %}
 
 {% schema %}
