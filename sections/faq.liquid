@@ -1,0 +1,100 @@
+{{ 'faq.css' | asset_url | stylesheet_tag }}
+
+<div class="faq-section" id="{{ section.id }}">
+  <div class="faq-container">
+    {% if section.settings.heading != blank %}
+      <h1 class="faq-heading">{{ section.settings.heading }}</h1>
+    {% endif %}
+    
+    <div class="faq-items">
+      {% for block in section.blocks %}
+        <div class="faq-item" {{ block.shopify_attributes }}>
+          <button class="faq-question" aria-expanded="false" aria-controls="faq-answer-{{ block.id }}">
+            <span class="faq-question-text">
+              <strong>{{ block.settings.question }}</strong>
+            </span>
+            <span class="faq-arrow">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </button>
+          <div class="faq-answer" id="faq-answer-{{ block.id }}" role="region">
+            <div class="faq-answer-content">
+              {{ block.settings.answer }}
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const faqSection = document.getElementById('{{ section.id }}');
+  
+  if (faqSection) {
+    const faqItems = faqSection.querySelectorAll('.faq-item');
+    const faqQuestions = faqSection.querySelectorAll('.faq-question');
+    
+    faqQuestions.forEach(question => {
+      question.addEventListener('click', function() {
+        const currentItem = this.parentElement;
+        const isCurrentlyActive = currentItem.classList.contains('active');
+        
+        faqItems.forEach(item => {
+          item.classList.remove('active');
+          const questionBtn = item.querySelector('.faq-question');
+          questionBtn.setAttribute('aria-expanded', 'false');
+        });
+
+        if (!isCurrentlyActive) {
+          currentItem.classList.add('active');
+          this.setAttribute('aria-expanded', 'true');
+        }
+      });
+    });
+  }
+});
+</script>
+
+{% schema %}
+{
+  "name": "FAQ",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Frequently asked questions"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "question",
+      "name": "Question Block",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "Frequently asked question"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer",
+          "default": "<p>Use this text to answer questions in as much detail as possible for your customers.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAQ Section",
+      "category": "Custom"
+    }
+  ]
+}
+{% endschema %}
