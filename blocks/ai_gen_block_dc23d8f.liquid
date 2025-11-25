@@ -1,0 +1,477 @@
+{% doc %}
+  @prompt
+    metafield product that i have
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-metafield-display-{{ ai_gen_id }} {
+    padding: {{ block.settings.padding }}px;
+    background-color: {{ block.settings.background_color }};
+    border-radius: {{ block.settings.border_radius }}px;
+  }
+
+  .ai-metafield-display__heading-{{ ai_gen_id }} {
+    color: {{ block.settings.heading_color }};
+    font-size: {{ block.settings.heading_size }}px;
+    margin: 0 0 {{ block.settings.spacing }}px 0;
+    font-weight: 700;
+  }
+
+  .ai-metafield-display__list-{{ ai_gen_id }} {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: {{ block.settings.spacing }}px;
+  }
+
+  .ai-metafield-display__item-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .ai-metafield-display__label-{{ ai_gen_id }} {
+    color: {{ block.settings.label_color }};
+    font-size: {{ block.settings.label_size }}px;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  .ai-metafield-display__value-{{ ai_gen_id }} {
+    color: {{ block.settings.value_color }};
+    font-size: {{ block.settings.value_size }}px;
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  .ai-metafield-display__value-{{ ai_gen_id }} img {
+    max-width: 100%;
+    height: auto;
+    border-radius: {{ block.settings.image_border_radius }}px;
+  }
+
+  .ai-metafield-display__divider-{{ ai_gen_id }} {
+    height: 1px;
+    background-color: {{ block.settings.divider_color }};
+    margin: {{ block.settings.spacing }}px 0;
+  }
+
+  .ai-metafield-display__empty-{{ ai_gen_id }} {
+    color: {{ block.settings.value_color }};
+    font-size: {{ block.settings.value_size }}px;
+    opacity: 0.6;
+    font-style: italic;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-metafield-display-{{ ai_gen_id }} {
+      padding: {{ block.settings.padding | times: 0.75 }}px;
+    }
+
+    .ai-metafield-display__heading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.heading_size | times: 0.85 }}px;
+    }
+  }
+{% endstyle %}
+
+<div class="ai-metafield-display-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  {% if block.settings.heading != blank %}
+    <h3 class="ai-metafield-display__heading-{{ ai_gen_id }}">{{ block.settings.heading }}</h3>
+  {% endif %}
+
+  <ul class="ai-metafield-display__list-{{ ai_gen_id }}">
+    {% if block.settings.metafield_1_namespace != blank and block.settings.metafield_1_key != blank %}
+      {% assign metafield_1 = product.metafields[block.settings.metafield_1_namespace][block.settings.metafield_1_key] %}
+      {% if metafield_1 != blank %}
+        <li class="ai-metafield-display__item-{{ ai_gen_id }}">
+          {% if block.settings.metafield_1_label != blank %}
+            <div class="ai-metafield-display__label-{{ ai_gen_id }}">{{ block.settings.metafield_1_label }}</div>
+          {% endif %}
+          <div class="ai-metafield-display__value-{{ ai_gen_id }}">
+            {% if metafield_1.type == 'file_reference' %}
+              <img src="{{ metafield_1 | image_url: width: 800 }}" alt="{{ metafield_1.alt }}" loading="lazy">
+            {% else %}
+              {{ metafield_1.value }}
+            {% endif %}
+          </div>
+        </li>
+        {% if block.settings.show_dividers and block.settings.metafield_2_namespace != blank %}
+          <div class="ai-metafield-display__divider-{{ ai_gen_id }}"></div>
+        {% endif %}
+      {% endif %}
+    {% endif %}
+
+    {% if block.settings.metafield_2_namespace != blank and block.settings.metafield_2_key != blank %}
+      {% assign metafield_2 = product.metafields[block.settings.metafield_2_namespace][block.settings.metafield_2_key] %}
+      {% if metafield_2 != blank %}
+        <li class="ai-metafield-display__item-{{ ai_gen_id }}">
+          {% if block.settings.metafield_2_label != blank %}
+            <div class="ai-metafield-display__label-{{ ai_gen_id }}">{{ block.settings.metafield_2_label }}</div>
+          {% endif %}
+          <div class="ai-metafield-display__value-{{ ai_gen_id }}">
+            {% if metafield_2.type == 'file_reference' %}
+              <img src="{{ metafield_2 | image_url: width: 800 }}" alt="{{ metafield_2.alt }}" loading="lazy">
+            {% else %}
+              {{ metafield_2.value }}
+            {% endif %}
+          </div>
+        </li>
+        {% if block.settings.show_dividers and block.settings.metafield_3_namespace != blank %}
+          <div class="ai-metafield-display__divider-{{ ai_gen_id }}"></div>
+        {% endif %}
+      {% endif %}
+    {% endif %}
+
+    {% if block.settings.metafield_3_namespace != blank and block.settings.metafield_3_key != blank %}
+      {% assign metafield_3 = product.metafields[block.settings.metafield_3_namespace][block.settings.metafield_3_key] %}
+      {% if metafield_3 != blank %}
+        <li class="ai-metafield-display__item-{{ ai_gen_id }}">
+          {% if block.settings.metafield_3_label != blank %}
+            <div class="ai-metafield-display__label-{{ ai_gen_id }}">{{ block.settings.metafield_3_label }}</div>
+          {% endif %}
+          <div class="ai-metafield-display__value-{{ ai_gen_id }}">
+            {% if metafield_3.type == 'file_reference' %}
+              <img src="{{ metafield_3 | image_url: width: 800 }}" alt="{{ metafield_3.alt }}" loading="lazy">
+            {% else %}
+              {{ metafield_3.value }}
+            {% endif %}
+          </div>
+        </li>
+        {% if block.settings.show_dividers and block.settings.metafield_4_namespace != blank %}
+          <div class="ai-metafield-display__divider-{{ ai_gen_id }}"></div>
+        {% endif %}
+      {% endif %}
+    {% endif %}
+
+    {% if block.settings.metafield_4_namespace != blank and block.settings.metafield_4_key != blank %}
+      {% assign metafield_4 = product.metafields[block.settings.metafield_4_namespace][block.settings.metafield_4_key] %}
+      {% if metafield_4 != blank %}
+        <li class="ai-metafield-display__item-{{ ai_gen_id }}">
+          {% if block.settings.metafield_4_label != blank %}
+            <div class="ai-metafield-display__label-{{ ai_gen_id }}">{{ block.settings.metafield_4_label }}</div>
+          {% endif %}
+          <div class="ai-metafield-display__value-{{ ai_gen_id }}">
+            {% if metafield_4.type == 'file_reference' %}
+              <img src="{{ metafield_4 | image_url: width: 800 }}" alt="{{ metafield_4.alt }}" loading="lazy">
+            {% else %}
+              {{ metafield_4.value }}
+            {% endif %}
+          </div>
+        </li>
+        {% if block.settings.show_dividers and block.settings.metafield_5_namespace != blank %}
+          <div class="ai-metafield-display__divider-{{ ai_gen_id }}"></div>
+        {% endif %}
+      {% endif %}
+    {% endif %}
+
+    {% if block.settings.metafield_5_namespace != blank and block.settings.metafield_5_key != blank %}
+      {% assign metafield_5 = product.metafields[block.settings.metafield_5_namespace][block.settings.metafield_5_key] %}
+      {% if metafield_5 != blank %}
+        <li class="ai-metafield-display__item-{{ ai_gen_id }}">
+          {% if block.settings.metafield_5_label != blank %}
+            <div class="ai-metafield-display__label-{{ ai_gen_id }}">{{ block.settings.metafield_5_label }}</div>
+          {% endif %}
+          <div class="ai-metafield-display__value-{{ ai_gen_id }}">
+            {% if metafield_5.type == 'file_reference' %}
+              <img src="{{ metafield_5 | image_url: width: 800 }}" alt="{{ metafield_5.alt }}" loading="lazy">
+            {% else %}
+              {{ metafield_5.value }}
+            {% endif %}
+          </div>
+        </li>
+      {% endif %}
+    {% endif %}
+  </ul>
+
+  {% liquid
+    assign has_metafield_1 = false
+    assign has_metafield_2 = false
+    assign has_metafield_3 = false
+    assign has_metafield_4 = false
+    assign has_metafield_5 = false
+
+    if block.settings.metafield_1_namespace != blank and block.settings.metafield_1_key != blank
+      assign metafield_1_check = product.metafields[block.settings.metafield_1_namespace][block.settings.metafield_1_key]
+      if metafield_1_check != blank
+        assign has_metafield_1 = true
+      endif
+    endif
+
+    if block.settings.metafield_2_namespace != blank and block.settings.metafield_2_key != blank
+      assign metafield_2_check = product.metafields[block.settings.metafield_2_namespace][block.settings.metafield_2_key]
+      if metafield_2_check != blank
+        assign has_metafield_2 = true
+      endif
+    endif
+
+    if block.settings.metafield_3_namespace != blank and block.settings.metafield_3_key != blank
+      assign metafield_3_check = product.metafields[block.settings.metafield_3_namespace][block.settings.metafield_3_key]
+      if metafield_3_check != blank
+        assign has_metafield_3 = true
+      endif
+    endif
+
+    if block.settings.metafield_4_namespace != blank and block.settings.metafield_4_key != blank
+      assign metafield_4_check = product.metafields[block.settings.metafield_4_namespace][block.settings.metafield_4_key]
+      if metafield_4_check != blank
+        assign has_metafield_4 = true
+      endif
+    endif
+
+    if block.settings.metafield_5_namespace != blank and block.settings.metafield_5_key != blank
+      assign metafield_5_check = product.metafields[block.settings.metafield_5_namespace][block.settings.metafield_5_key]
+      if metafield_5_check != blank
+        assign has_metafield_5 = true
+      endif
+    endif
+  %}
+
+  {% unless has_metafield_1 or has_metafield_2 or has_metafield_3 or has_metafield_4 or has_metafield_5 %}
+    <div class="ai-metafield-display__empty-{{ ai_gen_id }}">
+      Configure metafield namespaces and keys in the block settings
+    </div>
+  {% endunless %}
+</div>
+
+{% schema %}
+{
+  "name": "Product metafields",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Product details"
+    },
+    {
+      "type": "header",
+      "content": "Metafield 1"
+    },
+    {
+      "type": "text",
+      "id": "metafield_1_namespace",
+      "label": "Namespace",
+      "info": "Example: custom"
+    },
+    {
+      "type": "text",
+      "id": "metafield_1_key",
+      "label": "Key",
+      "info": "Example: material"
+    },
+    {
+      "type": "text",
+      "id": "metafield_1_label",
+      "label": "Label",
+      "default": "Material"
+    },
+    {
+      "type": "header",
+      "content": "Metafield 2"
+    },
+    {
+      "type": "text",
+      "id": "metafield_2_namespace",
+      "label": "Namespace"
+    },
+    {
+      "type": "text",
+      "id": "metafield_2_key",
+      "label": "Key"
+    },
+    {
+      "type": "text",
+      "id": "metafield_2_label",
+      "label": "Label",
+      "default": "Dimensions"
+    },
+    {
+      "type": "header",
+      "content": "Metafield 3"
+    },
+    {
+      "type": "text",
+      "id": "metafield_3_namespace",
+      "label": "Namespace"
+    },
+    {
+      "type": "text",
+      "id": "metafield_3_key",
+      "label": "Key"
+    },
+    {
+      "type": "text",
+      "id": "metafield_3_label",
+      "label": "Label",
+      "default": "Care instructions"
+    },
+    {
+      "type": "header",
+      "content": "Metafield 4"
+    },
+    {
+      "type": "text",
+      "id": "metafield_4_namespace",
+      "label": "Namespace"
+    },
+    {
+      "type": "text",
+      "id": "metafield_4_key",
+      "label": "Key"
+    },
+    {
+      "type": "text",
+      "id": "metafield_4_label",
+      "label": "Label",
+      "default": "Origin"
+    },
+    {
+      "type": "header",
+      "content": "Metafield 5"
+    },
+    {
+      "type": "text",
+      "id": "metafield_5_namespace",
+      "label": "Namespace"
+    },
+    {
+      "type": "text",
+      "id": "metafield_5_key",
+      "label": "Key"
+    },
+    {
+      "type": "text",
+      "id": "metafield_5_label",
+      "label": "Label",
+      "default": "Warranty"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dividers",
+      "label": "Show dividers",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "padding",
+      "min": 0,
+      "max": 60,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "spacing",
+      "min": 8,
+      "max": 32,
+      "step": 4,
+      "unit": "px",
+      "label": "Spacing",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "min": 0,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "image_border_radius",
+      "min": 0,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "label": "Image border radius",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#f5f5f5"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "label_color",
+      "label": "Label",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "value_color",
+      "label": "Value",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "divider_color",
+      "label": "Divider",
+      "default": "#e6e6e6"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "min": 14,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading size",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "label_size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Label size",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "value_size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Value size",
+      "default": 14
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product metafields"
+    }
+  ]
+}
+{% endschema %}
