@@ -321,4 +321,58 @@
       position: absolute;
     }
   }
+
+.quick-add__button.quick-add__button--choose {
+  background: linear-gradient(135deg,rgb(196, 200, 217),rgb(183, 194, 219));
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  padding: 0.6rem 1.2rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  box-shadow: 0 4px 10px rgba(175, 175, 175, 0.3);
+  transition: all 0.25s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+}
+
+.quick-add__button.quick-add__button--choose:hover {
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, rgb(196, 200, 217),rgb(183, 194, 219));
+  box-shadow: 0 6px 14px rgba(189, 189, 189, 0.25);
+}
+
+.quick-add__button.quick-add__button--choose:active {
+  transform: scale(0.97);
+  box-shadow: 0 2px 6px rgba(189, 189, 189, 0.25);
+}
+
+.quick-add__button.quick-add__button--choose .add-to-cart-icon {
+  width: 18px;
+  height: 18px;
+  display: inline-block;
+  transition: transform 0.2s ease;
+}
+
+.quick-add__button.quick-add__button--choose:hover .add-to-cart-icon {
+  transform: rotate(20deg) scale(1.1);
+}
+
+.quick-add__button.quick-add__button--choose .add-to-cart-text__content {
+  font-size: 0.9rem;
+}
+
+/* Add this to your stylesheet section */
+.quick-add:not([stay-visible]) .quick-add__button.quick-add__button--choose {
+  transform: none !important;
+  background: linear-gradient(135deg, rgb(196, 200, 217), rgb(183, 194, 219)) !important;
+  box-shadow: 0 4px 10px rgba(175, 175, 175, 0.3) !important;
+}
+
+.quick-add:not([stay-visible]) .quick-add__button.quick-add__button--choose .add-to-cart-icon {
+  transform: none !important;
+}
+
 {% endstylesheet %}

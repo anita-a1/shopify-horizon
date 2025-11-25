@@ -90,10 +90,26 @@ export class QuickAddComponent extends Component {
   #stayVisibleUntilDialogCloses(dialogComponent) {
     this.toggleAttribute('stay-visible', true);
 
-    dialogComponent.addEventListener(DialogCloseEvent.eventName, () => this.toggleAttribute('stay-visible', false), {
+    dialogComponent.addEventListener(DialogCloseEvent.eventName, () => {
+      this.toggleAttribute('stay-visible', false);
+      this.#resetButtonState(); 
+    }, {
       once: true,
     });
   }
+
+  #resetButtonState = () => {
+    const button = /** @type {HTMLElement | null} */ (this.querySelector('.quick-add__button--choose'));
+    if (!button) return;
+
+    button.blur(); 
+    
+    requestAnimationFrame(() => {
+      button.style.transform = '';
+      button.style.boxShadow = '';
+    });
+  };
+
 
   #openQuickAddModal = () => {
     const dialogComponent = document.getElementById('quick-add-dialog');
